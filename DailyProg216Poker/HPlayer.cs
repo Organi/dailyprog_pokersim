@@ -2,13 +2,13 @@
 
 namespace DailyProg216Poker
 {
-	public class Player
+	public class HPlayer : IPlayer
 	{
 		public int chips { get; set; }
 		public Hand hand { get; set; }
 		public string name { get; set; }
 
-		public Player (string n)
+		public HPlayer (string n)
 		{
 			this.name = n;
 		}
