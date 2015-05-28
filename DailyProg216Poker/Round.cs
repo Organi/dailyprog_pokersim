@@ -27,11 +27,13 @@ namespace DailyProg216Poker
 			this.ShowHands();
 
 			// Flop
-			this.ProcessFlop ();
+			this.DealFlop ();
 
 			// Turn
+			this.DealTurn ();
 
 			// River
+			this.DealRiver ();
 		
 		}
 
@@ -51,7 +53,7 @@ namespace DailyProg216Poker
 			}
 		}
 
-		public void ProcessFlop()
+		public void DealFlop()
 		{
 			// Burn Card
 			this.GameState.getDeck ().Draw ();
@@ -67,9 +69,28 @@ namespace DailyProg216Poker
 					Console.Write(", ");
 				}
 			});
+			Console.WriteLine();
 		}
 
+		public void DealTurn()
+		{
+			// Burn Card
+			this.GameState.getDeck ().Draw ();
+			// Draw Turn
+			this.turn = this.GameState.getDeck ().Draw ();
+			// Print Turn
+			Console.WriteLine("Turn: " + this.turn.getName ());
+		}
 
+		public void DealRiver()
+		{
+			// Burn Card
+			this.GameState.getDeck ().Draw ();
+			// Draw River
+			this.river = this.GameState.getDeck ().Draw ();
+			// Print River
+			Console.WriteLine("River: " + this.river.getName ());
+		}
 	}
 }
 
