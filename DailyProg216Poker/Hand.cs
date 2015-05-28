@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DailyProg216Poker
 {
@@ -30,6 +31,27 @@ namespace DailyProg216Poker
 		public void Remove(Card c)
 		{
 			this.hand.Remove (c);
+		}
+
+		public string GetString(bool useShortName = false)
+		{
+			string s = "";
+			Card last = this.hand.Last ();
+			foreach (Card c in this.hand)
+			{
+				if (useShortName)
+				{
+					s += c.getShortName ();
+				}
+				else {
+					s += c.getName ();
+				}
+				if (c != last)
+				{
+					s += ", ";
+				}
+			}
+			return s;
 		}
 	}
 }

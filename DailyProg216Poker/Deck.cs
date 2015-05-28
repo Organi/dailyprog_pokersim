@@ -41,7 +41,7 @@ namespace DailyProg216Poker
 			Console.WriteLine ();
 		}
 
-		public List<Card> DrawHand(int num)
+		public List<Card> DrawNo(int num)
 		{
 			List<Card> cards = new List<Card> ();
 			for (int i = 0; i < num; i++)
