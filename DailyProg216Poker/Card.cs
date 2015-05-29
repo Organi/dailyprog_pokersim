@@ -21,15 +21,17 @@ namespace DailyProg216Poker
 
 		public string getShortName()
 		{
+			char[] symbols = { '♥', '♦', '♠', '♣' };
 			Value[] v = { Value.Ace, Value.Jack, Value.Queen, Value.King };
 			string s = "";
 			if (v.Contains (this.value))
 			{
-				s = this.value.ToString ().Substring (0, 1) + this.suit.ToString ().Substring (0, 1);
+				s = this.value.ToString ().Substring (0, 1);
 			}
 			else {
-				s = (int)this.value + this.suit.ToString ().Substring (0, 1);
+				s = (int)value + "";
 			}
+			s += symbols[(int)this.suit];
 				
 			return s;
 		}
