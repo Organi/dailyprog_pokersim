@@ -20,21 +20,45 @@ namespace DailyProg216Poker
 
 		public void ProcessRound ()
 		{
+			// Blinds
+			//
+
 			// Deal Hands
 			this.DealHands ();
 
 			// Print Hands
 			this.ShowHands();
 
+			// Bet Round
+			this.BetRound ();
+
 			// Flop
 			this.DealFlop ();
+
+			// Bet Round
+			this.BetRound ();
 
 			// Turn
 			this.DealTurn ();
 
+			// Bet Round
+			this.BetRound ();
+
 			// River
 			this.DealRiver ();
-		
+
+			// Bet Round
+			this.BetRound ();
+		}
+
+		public void BetRound()
+		{
+			// To-Do: Bet Logic
+		}
+
+		private bool CheckPlayers()
+		{
+			// To-Do: Check Players betting
 		}
 
 		public void DealHands()
@@ -49,7 +73,7 @@ namespace DailyProg216Poker
 		{
 			foreach(IPlayer p in this.players)
 			{
-				Console.WriteLine (p.name + " hand: " + p.hand.GetString ());
+				Console.WriteLine (p.name + " hand: " + p.hand.GetString (true));
 			}
 		}
 
@@ -64,7 +88,7 @@ namespace DailyProg216Poker
 			Card last = this.flop.Last ();
 			Console.Write ("Flop: ");
 			this.flop.ForEach (delegate(Card c) {
-				Console.Write(c.getName ());
+				Console.Write(c.getShortName ());
 				if (!c.Equals (last)) {
 					Console.Write(", ");
 				}
@@ -79,7 +103,7 @@ namespace DailyProg216Poker
 			// Draw Turn
 			this.turn = this.GameState.getDeck ().Draw ();
 			// Print Turn
-			Console.WriteLine("Turn: " + this.turn.getName ());
+			Console.WriteLine("Turn: " + this.turn.getShortName ());
 		}
 
 		public void DealRiver()
@@ -89,7 +113,7 @@ namespace DailyProg216Poker
 			// Draw River
 			this.river = this.GameState.getDeck ().Draw ();
 			// Print River
-			Console.WriteLine("River: " + this.river.getName ());
+			Console.WriteLine("River: " + this.river.getShortName ());
 		}
 	}
 }
