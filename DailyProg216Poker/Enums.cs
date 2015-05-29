@@ -18,5 +18,6 @@ namespace DailyProg216Poker
 		Queen = 12,
 		King = 13
 	};
+	public enum Decision { FOLD, BET, CHECK, RAISE };
 }
 

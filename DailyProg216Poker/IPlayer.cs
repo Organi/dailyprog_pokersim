@@ -7,6 +7,7 @@ namespace DailyProg216Poker
 		int chips { get; set; }
 		Hand hand { get; set; }
 		string name { get; set; }
+		Tuple<Decision, int> GetDecision();
 	}
 }
 

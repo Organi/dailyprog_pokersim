@@ -12,6 +12,11 @@ namespace DailyProg216Poker
 		{
 			this.name = n;
 		}
+
+		public Tuple<Decision, int> GetDecision()
+		{
+			return Tuple.Create (Decision.CHECK, 0);
+		}
 	}
 }
 
