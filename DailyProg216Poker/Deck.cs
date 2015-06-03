@@ -64,10 +64,12 @@ namespace DailyProg216Poker
 				if (this.deck.Count.Equals (0))
 				{
 					Console.WriteLine ("Unable to draw card, deck is empty");
+					Console.WriteLine (e.Message);
 					return new Card (1, 1);
 				}
 				else {
 					Console.WriteLine ("Unable to draw card");
+					Console.WriteLine (e.Message);
 					return new Card (1, 1);
 				}
 			}

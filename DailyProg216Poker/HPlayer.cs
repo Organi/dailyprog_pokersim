@@ -2,21 +2,26 @@
 
 namespace DailyProg216Poker
 {
-	public class HPlayer : IPlayer
+	public class HPlayer : APlayer, IPlayer
 	{
-		public int chips { get; set; }
-		public Hand hand { get; set; }
-		public string name { get; set; }
+		public override int chips { get; set; }
+		public override Hand hand { get; set; }
+		public override string name { get; set; }
 
 		public HPlayer (string n)
 		{
 			this.name = n;
 		}
 
-		public Tuple<Decision, int> GetDecision()
+		public override Tuple<Decision, int> GetDecision()
 		{
 			return Tuple.Create (Decision.CHECK, 0);
 		}
+
+/*		public int GetBestHand()
+		{
+			return 0;
+		}*/
 	}
 }
 

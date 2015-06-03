@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DailyProg216Poker
 {
@@ -8,6 +9,7 @@ namespace DailyProg216Poker
 		Hand hand { get; set; }
 		string name { get; set; }
 		Tuple<Decision, int> GetDecision();
+		Tuple<int, string> GetBestHand(List<Card> tableCards);
 	}
 }
 

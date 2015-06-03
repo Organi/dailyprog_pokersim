@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace DailyProg216Poker
 {
@@ -49,6 +50,9 @@ namespace DailyProg216Poker
 
 			// Bet Round
 			this.BetRound ();
+
+			// Determine Winner
+			this.DetermineWinner ();
 		}
 
 		public void BetRound()
@@ -59,6 +63,7 @@ namespace DailyProg216Poker
 		private bool CheckPlayers()
 		{
 			// To-Do: Check Players betting
+			return true;
 		}
 
 		public void DealHands()
@@ -114,6 +119,27 @@ namespace DailyProg216Poker
 			this.river = this.GameState.getDeck ().Draw ();
 			// Print River
 			Console.WriteLine("River: " + this.river.getShortName ());
+		}
+
+		public void DetermineWinner()
+		{
+			Tuple<int, string> winningHand = new Tuple<int, string>(0, "");
+			foreach (IPlayer p in this.players)
+			{
+				// Create a list of the cards on the table
+				List<Card> tableCards = new List<Card> ();
+				tableCards.AddRange (flop);
+				tableCards.Add (turn);
+				tableCards.Add (river);
+				// Get the players best hand
+				Tuple<int, string> tmp = p.GetBestHand (tableCards);
+				// Check if the current tmp hand is the best one so far
+				if (tmp.Item1 > winningHand.Item1)
+				{
+					winningHand = tmp;
+				}
+			}
+			Console.WriteLine (winningHand);
 		}
 	}
 }
