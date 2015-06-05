@@ -10,7 +10,7 @@ namespace DailyProg216Poker
 
 		public HPlayer (string n)
 		{
-			this.name = n;
+			name = n;
 		}
 
 		public override Tuple<Decision, int> GetDecision()

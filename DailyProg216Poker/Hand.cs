@@ -6,38 +6,38 @@ namespace DailyProg216Poker
 {
 	public class Hand
 	{
-		private List<Card> hand = new List<Card>();
+		private readonly List<Card> hand = new List<Card>();
 
 		public Hand (List<Card> h)
 		{
-			this.hand = h;
+			hand = h;
 		}
 
 		public List<Card> getHand()
 		{
-			return this.hand;
+			return hand;
 		}
 
 		public int Size()
 		{
-			return this.hand.Count;
+			return hand.Count;
 		}
 
 		public void Add(Card c)
 		{
-			this.hand.Add (c);
+			hand.Add (c);
 		}
 
 		public void Remove(Card c)
 		{
-			this.hand.Remove (c);
+			hand.Remove (c);
 		}
 
 		public string GetString(bool useShortName = false)
 		{
 			string s = "";
-			Card last = this.hand.Last ();
-			foreach (Card c in this.hand)
+			Card last = hand.Last ();
+			foreach (Card c in hand)
 			{
 				if (useShortName)
 				{

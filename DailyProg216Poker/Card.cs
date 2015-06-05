@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace DailyProg216Poker
 {
@@ -16,22 +15,22 @@ namespace DailyProg216Poker
 
 		public string getName()
 		{
-			return this.value + " of " + this.suit.ToString ().Substring (0, 1) + this.suit.ToString ().Substring (1).ToLower ();
+			return value + " of " + suit.ToString ().Substring (0, 1) + suit.ToString ().Substring (1).ToLower ();
 		}
 
 		public string getShortName()
 		{
-			char[] symbols = { '♥', '♦', '♠', '♣' };
+			char[] symbols = { '\u2665', '\u2666', '\u2660', '\u2663' };
 			Value[] v = { Value.Ace, Value.Jack, Value.Queen, Value.King };
 			string s = "";
-			if (v.Contains (this.value))
+			if (v.Contains (value))
 			{
-				s = this.value.ToString ().Substring (0, 1);
+				s = value.ToString ().Substring (0, 1);
 			}
 			else {
 				s = (int)value + "";
 			}
-			s += symbols[(int)this.suit];
+			s += symbols[(int)suit];
 				
 			return s;
 		}

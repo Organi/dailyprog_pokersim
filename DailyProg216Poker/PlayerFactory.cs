@@ -4,10 +4,6 @@ namespace DailyProg216Poker
 {
 	public class PlayerFactory
 	{
-		public PlayerFactory ()
-		{
-		}
-
 		public IPlayer Create(char Type, string name)
 		{
 			if (Type == 'H')

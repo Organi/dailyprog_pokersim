@@ -13,19 +13,19 @@ namespace DailyProg216Poker
 			{
 				foreach (Value v in Enum.GetValues (typeof(Value)))
 				{
-					this.deck.Add (new Card ((int)v, (int)s));
+					deck.Add (new Card ((int)v, (int)s));
 				}
 			}
 		}
 
 		public int Count()
 		{
-			return this.deck.Count;
+			return deck.Count;
 		}
 
 		public void ShowInConsole()
 		{
-			foreach (Card c in this.deck)
+			foreach (Card c in deck)
 			{
 				Console.WriteLine (c.getName ());
 			}
@@ -34,7 +34,7 @@ namespace DailyProg216Poker
 		public void ShowShortInConsole()
 		{
 			Console.WriteLine ();
-			foreach (Card c in this.deck)
+			foreach (Card c in deck)
 			{
 				Console.Write (c.getShortName() + " ");
 			}
@@ -55,13 +55,13 @@ namespace DailyProg216Poker
 		{
 			try
 			{
-				Card c = this.deck [this.deck.Count - 1];
-				this.deck.RemoveAt (this.deck.Count - 1);
+				Card c = deck [deck.Count - 1];
+				deck.RemoveAt (deck.Count - 1);
 				return c;
 			}
 			catch(Exception e)
 			{
-				if (this.deck.Count.Equals (0))
+				if (deck.Count.Equals (0))
 				{
 					Console.WriteLine ("Unable to draw card, deck is empty");
 					Console.WriteLine (e.Message);
@@ -79,14 +79,14 @@ namespace DailyProg216Poker
 		{
 			List<Card> shuffledDeck = new List<Card> ();
 			Random r = new Random ();
-			int deckSize = this.deck.Count;
+			int deckSize = deck.Count;
 			for (int i=0; i<deckSize; i++)
 			{
-				int pos = r.Next (this.deck.Count);
-				shuffledDeck.Add (this.deck [pos]);
-				this.deck.RemoveAt (pos);
+				int pos = r.Next (deck.Count);
+				shuffledDeck.Add (deck [pos]);
+				deck.RemoveAt (pos);
 			}
-			this.deck = shuffledDeck;
+			deck = shuffledDeck;
 		}
 	}
 }

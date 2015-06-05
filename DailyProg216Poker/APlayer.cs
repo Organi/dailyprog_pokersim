@@ -15,7 +15,7 @@ namespace DailyProg216Poker
 		public Tuple<int, string, Hand> GetBestHand(List<Card> tableCards)
 		{
 			// Add the players hand
-			tableCards.AddRange (this.hand.getHand ());
+			tableCards.AddRange (hand.getHand ());
 			Tuple<int, string, Hand> bestHand = new Tuple<int, string, Hand>(0, "", new Hand(null));
 			List<List<Card>> handCombinations = new List<List<Card>> ();
 			foreach (IEnumerable<Card> c in tableCards.Combinations (5))

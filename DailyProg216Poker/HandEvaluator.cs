@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DailyProg216Poker
@@ -10,15 +8,11 @@ namespace DailyProg216Poker
 		int[] s;
 		int[] v;
 
-		public HandEvaluator ()
-		{
-		}
-
 		public Tuple<int, string> GetHandScore(Hand h)
 		{
 			// Reset Suits and Values
-			this.s = new int[Enum.GetNames(typeof(Suit)).Length+1];
-			this.v = new int[Enum.GetNames (typeof(Value)).Length+1];
+			s = new int[Enum.GetNames(typeof(Suit)).Length+1];
+			v = new int[Enum.GetNames (typeof(Value)).Length+1];
 			for (int i = 0; i < s.Length; i++)
 			{
 				s [i] = 0;
@@ -35,63 +29,63 @@ namespace DailyProg216Poker
 				v [(int)c.value]++;
 			}
 
-			Tuple<int, string> StraightFlushScore = this.CheckStraightFlush ();
+			Tuple<int, string> StraightFlushScore = CheckStraightFlush ();
 			if (StraightFlushScore.Item1 > 0)
 			{
 				return StraightFlushScore;
 			}
-			Tuple<int, string> FourOfAKindScore = this.CheckFourOfAKind ();
+			Tuple<int, string> FourOfAKindScore = CheckFourOfAKind ();
 			if (FourOfAKindScore.Item1 > 0)
 			{
 				return FourOfAKindScore;
 			}
-			Tuple<int, string> FullHouseScore = this.CheckFullHouse ();
+			Tuple<int, string> FullHouseScore = CheckFullHouse ();
 			if (FullHouseScore.Item1 > 0)
 			{
 				return FullHouseScore;
 			}
-			Tuple<int, string> FlushScore = this.CheckFlush ();
+			Tuple<int, string> FlushScore = CheckFlush ();
 			if (FlushScore.Item1 > 0)
 			{
 				return FlushScore;
 			}
-			Tuple<int, string> StraightScore = this.CheckStraight ();
+			Tuple<int, string> StraightScore = CheckStraight ();
 			if (StraightScore.Item1 > 0)
 			{
 				return StraightScore;
 			}
-			Tuple<int, string> ThreeOfAKindScore = this.CheckThreeOfAKind ();
+			Tuple<int, string> ThreeOfAKindScore = CheckThreeOfAKind ();
 			if (ThreeOfAKindScore.Item1 > 0)
 			{
 				return ThreeOfAKindScore;
 			}
-			Tuple<int, string> TwoPairScore = this.CheckTwoPair ();
+			Tuple<int, string> TwoPairScore = CheckTwoPair ();
 			if (TwoPairScore.Item1 > 0)
 			{
 				return TwoPairScore;
 			}
-			Tuple<int, string> PairScore = this.CheckPair ();
+			Tuple<int, string> PairScore = CheckPair ();
 			if (PairScore.Item1 > 0)
 			{
 				return PairScore;
 			}
-			return this.CheckHighCard ();
+			return CheckHighCard ();
 		}
 
 		private Tuple<int, string> CheckStraightFlush()
 		{
-			if (this.CheckFlush ().Item1 == 0)
+			if (CheckFlush ().Item1 == 0)
 			{
 				return Tuple.Create(0, "");
 			}
 			int score = 900000;
 
-			Tuple<int, string> straight = this.CheckStraight ();
+			Tuple<int, string> straight = CheckStraight ();
 			score += straight.Item1;
 
 			if (score > 900000)
 			{
-				string description = "";
+				string description;
 				if (straight.Item2.StartsWith ("Ace"))
 				{
 					description = "Royal Flush";
@@ -161,7 +155,7 @@ namespace DailyProg216Poker
 		private Tuple<int, string> CheckStraight()
 		{
 			int score = 500000;
-			int card = 0;
+			int card;
 			// A,2,3,4,5
 			if (v[1] == 1 && v[2] == 1 && v[3] == 1 && v[4] == 1 && v[5] == 1)
 			{

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 
 namespace DailyProg216Poker
 {
@@ -11,12 +10,14 @@ namespace DailyProg216Poker
 		List<Card> flop;
 		Card turn;
 		Card river;
-		Poker GameState;
+		readonly Poker GameState;
+		public double runTime { get; set; }
 
 		public Round (Poker gs)
 		{
-			this.players = gs.getPlayers ();
-			this.GameState = gs;
+			players = gs.getPlayers ();
+			GameState = gs;
+			gs.setUpDeck ();
 		}
 
 		public void ProcessRound ()
@@ -25,34 +26,34 @@ namespace DailyProg216Poker
 			//
 
 			// Deal Hands
-			this.DealHands ();
+			DealHands ();
 
 			// Print Hands
-			this.ShowHands();
+			ShowHands ();
 
 			// Bet Round
-			this.BetRound ();
+			BetRound ();
 
 			// Flop
-			this.DealFlop ();
+			DealFlop ();
 
 			// Bet Round
-			this.BetRound ();
+			BetRound ();
 
 			// Turn
-			this.DealTurn ();
+			DealTurn ();
 
 			// Bet Round
-			this.BetRound ();
+			BetRound ();
 
 			// River
-			this.DealRiver ();
+			DealRiver ();
 
 			// Bet Round
-			this.BetRound ();
+			BetRound ();
 
 			// Determine Winner
-			this.DetermineWinner ();
+			DetermineWinner ();
 		}
 
 		public void BetRound()
@@ -68,64 +69,76 @@ namespace DailyProg216Poker
 
 		public void DealHands()
 		{
-			foreach(IPlayer p in this.players)
+			foreach(IPlayer p in players)
 			{
-				p.hand = new Hand (this.GameState.getDeck ().DrawNo (2));
+				p.hand = new Hand (GameState.getDeck ().DrawNo (2));
 			}
 		}
 
 		public void ShowHands ()
 		{
-			foreach(IPlayer p in this.players)
+			if (GameState.getPrintRoundOutput ())
 			{
-				Console.WriteLine (p.name + " hand: " + p.hand.GetString (true));
+				foreach(IPlayer p in players)
+				{
+					Console.WriteLine (p.name + " hand: " + p.hand.GetString (true));
+				}				
 			}
 		}
 
 		public void DealFlop()
 		{
 			// Burn Card
-			this.GameState.getDeck ().Draw ();
+			GameState.getDeck ().Draw ();
 			// Draw Flop
-			this.flop = this.GameState.getDeck ().DrawNo (3);
+			flop = GameState.getDeck ().DrawNo (3);
 			// Print Flop
-			Console.WriteLine();
-			Card last = this.flop.Last ();
-			Console.Write ("Flop: ");
-			this.flop.ForEach (delegate(Card c) {
-				Console.Write(c.getShortName ());
-				if (!c.Equals (last)) {
-					Console.Write(", ");
-				}
-			});
-			Console.WriteLine();
+			if (GameState.getPrintRoundOutput ())
+			{
+				Console.WriteLine();
+				Card last = flop.Last ();
+				Console.Write ("Flop: ");
+				flop.ForEach (delegate(Card c) {
+					Console.Write(c.getShortName ());
+					if (!c.Equals (last)) {
+						Console.Write(", ");
+					}
+				});
+				Console.WriteLine();				
+			}
 		}
 
 		public void DealTurn()
 		{
 			// Burn Card
-			this.GameState.getDeck ().Draw ();
+			GameState.getDeck ().Draw ();
 			// Draw Turn
-			this.turn = this.GameState.getDeck ().Draw ();
+			turn = GameState.getDeck ().Draw ();
 			// Print Turn
-			Console.WriteLine("Turn: " + this.turn.getShortName ());
+			if (GameState.getPrintRoundOutput ())
+			{
+				Console.WriteLine("Turn: " + turn.getShortName ());				
+			}
 		}
 
 		public void DealRiver()
 		{
 			// Burn Card
-			this.GameState.getDeck ().Draw ();
+			GameState.getDeck ().Draw ();
 			// Draw River
-			this.river = this.GameState.getDeck ().Draw ();
+			river = GameState.getDeck ().Draw ();
 			// Print River
-			Console.WriteLine("River: " + this.river.getShortName ());
+			if (GameState.getPrintRoundOutput ())
+			{
+				Console.WriteLine("River: " + river.getShortName ());				
+			}
 		}
 
 		public void DetermineWinner()
 		{
 			Tuple<int, string, Hand> winningHandScore = new Tuple<int, string, Hand>(0, "", new Hand(null));
 			IPlayer winningPlayer = new HPlayer ("");
-			foreach (IPlayer p in this.players)
+			foreach (IPlayer p in players)
 			{
 				// Create a list of the cards on the table
 				List<Card> tableCards = new List<Card> ();
@@ -141,10 +154,13 @@ namespace DailyProg216Poker
 					winningPlayer = p;
 				}
 			}
-			Console.WriteLine ();
-			Console.WriteLine ("Winning Player: " + winningPlayer.name);
-			Console.WriteLine ("Winning Hand: " + winningHandScore.Item3.GetString (true));
-			Console.WriteLine (winningHandScore.Item2);
+			if (GameState.getPrintRoundOutput ())
+			{
+				Console.WriteLine ();
+				Console.WriteLine ("Winning Player: " + winningPlayer.name);
+				Console.WriteLine ("Winning Hand: " + winningHandScore.Item3.GetString (true));
+				Console.WriteLine (winningHandScore.Item2);				
+			}
 		}
 	}
 }
