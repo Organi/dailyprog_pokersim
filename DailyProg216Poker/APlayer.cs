@@ -12,13 +12,11 @@ namespace DailyProg216Poker
 
 		public abstract Tuple<Decision, int> GetDecision ();
 
-		public Tuple<int, string> GetBestHand(List<Card> tableCards)
+		public Tuple<int, string, Hand> GetBestHand(List<Card> tableCards)
 		{
 			// Add the players hand
 			tableCards.AddRange (this.hand.getHand ());
-
-			List<int> handScores = new List<int> ();
-			List<string> handStrings = new List<string> ();
+			Tuple<int, string, Hand> bestHand = new Tuple<int, string, Hand>(0, "", new Hand(null));
 			List<List<Card>> handCombinations = new List<List<Card>> ();
 			foreach (IEnumerable<Card> c in tableCards.Combinations (5))
 			{
@@ -28,10 +26,12 @@ namespace DailyProg216Poker
 			foreach (List<Card> h in handCombinations)
 			{
 				Tuple<int, string> hs = hEval.GetHandScore (new Hand (h));
-				handScores.Add (hs.Item1);
-				handStrings.Add (hs.Item2);
+				if (hs.Item1 > bestHand.Item1)
+				{
+					bestHand = Tuple.Create (hs.Item1, hs.Item2, new Hand (h));
+				}
 			}
-			return Tuple.Create (handScores.Max (), handStrings[handScores.IndexOf(handScores.Max())]);
+			return bestHand;
 		}
 	}
 }

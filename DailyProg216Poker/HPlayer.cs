@@ -17,11 +17,6 @@ namespace DailyProg216Poker
 		{
 			return Tuple.Create (Decision.CHECK, 0);
 		}
-
-/*		public int GetBestHand()
-		{
-			return 0;
-		}*/
 	}
 }
 

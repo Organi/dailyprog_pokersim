@@ -19,5 +19,20 @@ namespace DailyProg216Poker
 		King = 13
 	};
 	public enum Decision { FOLD, BET, CHECK, RAISE };
+	public enum Plurals {
+		Aces = 1,
+		Twos = 2,
+		Threes = 3,
+		Fours = 4,
+		Fives = 5,
+		Sixes = 6,
+		Sevens = 7,
+		Eights = 8,
+		Nines = 9,
+		Tens = 10,
+		Jacks = 11,
+		Queens = 12,
+		Kings = 13
+	}
 }
 

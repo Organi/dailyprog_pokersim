@@ -9,7 +9,7 @@ namespace DailyProg216Poker
 		Hand hand { get; set; }
 		string name { get; set; }
 		Tuple<Decision, int> GetDecision();
-		Tuple<int, string> GetBestHand(List<Card> tableCards);
+		Tuple<int, string, Hand> GetBestHand(List<Card> tableCards);
 	}
 }
 

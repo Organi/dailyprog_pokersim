@@ -123,7 +123,8 @@ namespace DailyProg216Poker
 
 		public void DetermineWinner()
 		{
-			Tuple<int, string> winningHand = new Tuple<int, string>(0, "");
+			Tuple<int, string, Hand> winningHandScore = new Tuple<int, string, Hand>(0, "", new Hand(null));
+			IPlayer winningPlayer = new HPlayer ("");
 			foreach (IPlayer p in this.players)
 			{
 				// Create a list of the cards on the table
@@ -132,14 +133,18 @@ namespace DailyProg216Poker
 				tableCards.Add (turn);
 				tableCards.Add (river);
 				// Get the players best hand
-				Tuple<int, string> tmp = p.GetBestHand (tableCards);
+				Tuple<int, string, Hand> tmp = p.GetBestHand (tableCards);
 				// Check if the current tmp hand is the best one so far
-				if (tmp.Item1 > winningHand.Item1)
+				if (tmp.Item1 > winningHandScore.Item1)
 				{
-					winningHand = tmp;
+					winningHandScore = tmp;
+					winningPlayer = p;
 				}
 			}
-			Console.WriteLine (winningHand);
+			Console.WriteLine ();
+			Console.WriteLine ("Winning Player: " + winningPlayer.name);
+			Console.WriteLine ("Winning Hand: " + winningHandScore.Item3.GetString (true));
+			Console.WriteLine (winningHandScore.Item2);
 		}
 	}
 }
