@@ -11,7 +11,9 @@ namespace DailyProg216Poker
 		Card turn;
 		Card river;
 		readonly Poker GameState;
-		public double runTime { get; set; }
+		public long runTime { get; set; }
+		public IPlayer winningPlayer;
+		public HandType winningHandType;
 
 		public Round (Poker gs)
 		{
@@ -137,7 +139,6 @@ namespace DailyProg216Poker
 		public void DetermineWinner()
 		{
 			Tuple<int, string, Hand> winningHandScore = new Tuple<int, string, Hand>(0, "", new Hand(null));
-			IPlayer winningPlayer = new HPlayer ("");
 			foreach (IPlayer p in players)
 			{
 				// Create a list of the cards on the table
@@ -154,6 +155,11 @@ namespace DailyProg216Poker
 					winningPlayer = p;
 				}
 			}
+
+			// Save Winner
+			HandEvaluator hEval = new HandEvaluator ();
+			winningHandType = hEval.GetHandType (winningHandScore.Item1);
+
 			if (GameState.getPrintRoundOutput ())
 			{
 				Console.WriteLine ();

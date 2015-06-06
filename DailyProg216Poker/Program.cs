@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace DailyProg216Poker
 {
@@ -9,15 +10,17 @@ namespace DailyProg216Poker
 		Deck deck;
 		List<IPlayer> players = new List<IPlayer> ();
 		const bool includeHumanPlayer = true;
-		const int noOfRounds = 200;
+		const int noOfRounds = 20;
 		const bool printRoundOutput = false;
 		const bool storeRounds = false;
 		const bool showStats = true;
 		public List<Round> rounds = new List<Round> ();
+		public Dictionary<HandType, int> winningHands = new Dictionary<HandType, int> ();
+		public Dictionary<string, int> winningPlayers = new Dictionary<string, int> ();
 
 		// Stats
-		public double[] roundTimes = new double[noOfRounds];
-		public TimeSpan programExecutionTime = new TimeSpan();
+		public long[] roundTimes = new long[noOfRounds];
+		public long programExecutionTime;
 
 		int NoOfPlayers;
 		string[] playerNames = {"Tom","Bob","Amy","Cat","Jake","Fred","Sara","Beth"};
@@ -25,7 +28,7 @@ namespace DailyProg216Poker
 		public static void Main (string[] args)
 		{
 			// Program Start
-			DateTime programStart = DateTime.UtcNow;
+			Stopwatch programTimer = Stopwatch.StartNew();
 
 			Poker p = new Poker ();
 
@@ -38,7 +41,7 @@ namespace DailyProg216Poker
 			for (int i = 0; i < Poker.noOfRounds; i++)
 			{
 				// Record Time
-				DateTime begin = DateTime.UtcNow;
+				Stopwatch roundTimer = Stopwatch.StartNew ();
 
 				// Start New Round
 				Round r = new Round(p);
@@ -53,8 +56,8 @@ namespace DailyProg216Poker
 				}
 
 				// Record Time
-				DateTime end = DateTime.UtcNow;
-				r.runTime = (end - begin).TotalMilliseconds;
+				roundTimer.Stop ();
+				r.runTime = roundTimer.ElapsedMilliseconds;
 
 				// Record Stats
 				p.roundTimes[i] = r.runTime;
@@ -66,12 +69,21 @@ namespace DailyProg216Poker
 				}
 				else {
 					// Or just store statistics
+
+					// Update Winning Hand Stats
+					int currentCount;
+					p.winningHands.TryGetValue (r.winningHandType, out currentCount);
+					p.winningHands [r.winningHandType] = currentCount + 1;
+
+					// Update Winning Player Stats
+					p.winningPlayers.TryGetValue (r.winningPlayer.name, out currentCount);
+					p.winningPlayers [r.winningPlayer.name] = currentCount + 1;
 				}
 			}
 
 			// Program End
-			DateTime programEnd = DateTime.UtcNow;
-			p.programExecutionTime = programEnd - programStart;
+			programTimer.Stop();
+			p.programExecutionTime = programTimer.ElapsedMilliseconds;
 
 			if (Poker.showStats)
 			{
@@ -148,16 +160,30 @@ namespace DailyProg216Poker
 
 		public void calcStats()
 		{
-			double progExecutionTime = programExecutionTime.TotalMilliseconds;
-			double progExecutionTimeSeconds = progExecutionTime / 1000;
+			double progExecutionTimeSeconds = programExecutionTime / 1000;
 			double roundExecutionTime = roundTimes.Sum ();
 			double roundExecutionTimeSeconds = roundExecutionTime / 1000;
 			double averageRoundTime = roundTimes.Average ();
-			Console.WriteLine ("Total Program Execution Time: " + progExecutionTime + " ms.");
+			Console.WriteLine ("Total Program Execution Time: " + programExecutionTime + " ms.");
 			Console.WriteLine ("Total Program Execution Time: " + progExecutionTimeSeconds + " seconds.");
 			Console.WriteLine ("Total Round Execution Time: " + roundExecutionTime + " ms.");
 			Console.WriteLine ("Total Round Execution Time: " + roundExecutionTimeSeconds + " seconds.");
 			Console.WriteLine ("Average Round Execution Time: " + averageRoundTime + " ms.");
+			Console.WriteLine ();
+
+			// Sort Dictionaries
+			var sortedWinningPlayers = from entry in winningPlayers orderby entry.Value descending select entry;
+			var sortedWinningHands = from entry in winningHands orderby entry.Value descending select entry;
+
+			foreach (KeyValuePair<string, int> player in sortedWinningPlayers)
+			{
+				Console.WriteLine (player.Key + " won " + player.Value + " times");
+			}
+			Console.WriteLine ();
+			foreach (KeyValuePair<HandType, int> hands in sortedWinningHands)
+			{
+				Console.WriteLine (hands.Key + ": " + hands.Value + " wins");
+			}
 		}
 	}
 

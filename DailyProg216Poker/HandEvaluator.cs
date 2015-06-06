@@ -72,6 +72,28 @@ namespace DailyProg216Poker
 			return CheckHighCard ();
 		}
 
+		public HandType GetHandType(int score)
+		{
+			if (score >= 900000)
+				return HandType.STRAIGHT_FLUSH;
+			else if (score >= 800000)
+				return HandType.FOUR_OF_A_KIND;
+			else if (score >= 700000)
+				return HandType.FULL_HOUSE;
+			else if (score >= 600000)
+				return HandType.FLUSH;
+			else if (score >= 500000)
+				return HandType.STRAIGHT;
+			else if (score >= 400000)
+				return HandType.THREE_OF_A_KIND;
+			else if (score >= 300000)
+				return HandType.TWO_PAIR;
+			else if (score >= 200000)
+				return HandType.PAIR;
+			else
+				return HandType.HIGH_CARD;
+		}
+
 		private Tuple<int, string> CheckStraightFlush()
 		{
 			if (CheckFlush ().Item1 == 0)

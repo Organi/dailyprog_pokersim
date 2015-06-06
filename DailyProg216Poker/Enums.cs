@@ -2,6 +2,7 @@
 
 namespace DailyProg216Poker
 {
+	public enum Decision { FOLD, BET, CHECK, RAISE };
 	public enum Suit { HEARTS, DIAMONDS, SPADES, CLUBS };
 	public enum Value {
 		Ace = 1,
@@ -18,7 +19,6 @@ namespace DailyProg216Poker
 		Queen = 12,
 		King = 13
 	};
-	public enum Decision { FOLD, BET, CHECK, RAISE };
 	public enum Plurals {
 		Aces = 1,
 		Twos = 2,
@@ -33,6 +33,17 @@ namespace DailyProg216Poker
 		Jacks = 11,
 		Queens = 12,
 		Kings = 13
+	}
+	public enum HandType {
+		STRAIGHT_FLUSH,
+		FOUR_OF_A_KIND,
+		FULL_HOUSE,
+		FLUSH,
+		STRAIGHT,
+		THREE_OF_A_KIND,
+		TWO_PAIR,
+		PAIR,
+		HIGH_CARD
 	}
 }
 
