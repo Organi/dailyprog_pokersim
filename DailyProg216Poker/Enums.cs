@@ -2,6 +2,78 @@
 
 namespace DailyProg216Poker
 {
+	public static class References
+	{
+		// This assumes the structure of the Value Enum
+		public static string GetValueString(int value)
+		{
+			switch(value)
+			{
+			case 1:
+				return "Ace";
+			case 2:
+				return "Two";
+			case 3:
+				return "Three";
+			case 4:
+				return "Four";
+			case 5:
+				return "Five";
+			case 6:
+				return "Six";
+			case 7:
+				return "Seven";
+			case 8:
+				return "Eight";
+			case 9:
+				return "Nine";
+			case 10:
+				return "Ten";
+			case 11:
+				return "Jack";
+			case 12:
+				return "Queen";
+			case 13:
+				return "King";
+			}
+			return "";
+		}
+
+		public static string GetPluralString(int value)
+		{
+			switch(value)
+			{
+			case 1:
+				return "Aces";
+			case 2:
+				return "Twos";
+			case 3:
+				return "Threes";
+			case 4:
+				return "Fours";
+			case 5:
+				return "Fives";
+			case 6:
+				return "Sixes";
+			case 7:
+				return "Sevens";
+			case 8:
+				return "Eights";
+			case 9:
+				return "Nines";
+			case 10:
+				return "Tens";
+			case 11:
+				return "Jacks";
+			case 12:
+				return "Queens";
+			case 13:
+				return "Kings";
+			}
+			return "";
+		}
+	}
+
 	public enum Decision { FOLD, BET, CHECK, RAISE };
 	public enum Suit { HEARTS, DIAMONDS, SPADES, CLUBS };
 	public enum Value {

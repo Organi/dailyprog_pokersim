@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Diagnostics;
 
 namespace DailyProg216Poker
 {
@@ -7,12 +8,41 @@ namespace DailyProg216Poker
 	{
 		int[] s;
 		int[] v;
+		// Hand Scores
+		private int StraightFlushScore;
+		private int FourOfAKindScore;
+		private int FullHouseScore;
+		private int FlushScore;
+		private int StraightScore;
+		private int ThreeOfAKindScore;
+		private int TwoPairScore;
+		private int PairScore;
+		private int HighCardScore;
+		// Counts
+		private int MaxValueCount;
+		private int MaxSuitCount;
+		// Hand Strings
+		private string StraightFlushDescription;
+		private string FourOfAKindDescription;
+		private string FullHouseDescription;
+		private string FlushDescription;
+		private string StraightDescription;
+		private string ThreeOfAKindDescription;
+		private string TwoPairDescription;
+		private string PairDescription;
+		private string HighCardDescription;
 
-		public Tuple<int, string> GetHandScore(Hand h)
+		public int GetHandScore(Hand h, out int handScore, out string handDesc)
 		{
 			// Reset Suits and Values
-			s = new int[Enum.GetNames(typeof(Suit)).Length+1];
-			v = new int[Enum.GetNames (typeof(Value)).Length+1];
+			// We assume for the sake of speed that there are 4 Suits and 13 Values
+			// to avoid counting the Enums which is costly.
+			// We +1 to these to avoid using the 0 index
+			//s = new int[Enum.GetNames(typeof(Suit)).Length+1];
+			//v = new int[Enum.GetNames (typeof(Value)).Length+1];
+			s = new int[5];
+			v = new int[14];
+
 			for (int i = 0; i < s.Length; i++)
 			{
 				s [i] = 0;
@@ -23,53 +53,87 @@ namespace DailyProg216Poker
 			}
 
 			// Set suits and values for the hand
+			MaxSuitCount = 0;
+			MaxValueCount = 0;
 			foreach (Card c in h.getHand ())
 			{
 				s [(int)c.suit]++;
 				v [(int)c.value]++;
+				// Set Maximum Values
+				if (s [(int)c.suit] > MaxSuitCount)
+					MaxSuitCount = s [(int)c.suit];
+				if (v [(int)c.value] > MaxValueCount)
+					MaxValueCount = v [(int)c.value];
 			}
 
-			Tuple<int, string> StraightFlushScore = CheckStraightFlush ();
-			if (StraightFlushScore.Item1 > 0)
+			StraightFlushScore = CheckStraightFlush ();
+			if (StraightFlushScore > 0)
 			{
-				return StraightFlushScore;
+				handScore = StraightFlushScore;
+				handDesc = StraightFlushDescription;
+				return handScore;
 			}
-			Tuple<int, string> FourOfAKindScore = CheckFourOfAKind ();
-			if (FourOfAKindScore.Item1 > 0)
+
+			FourOfAKindScore = CheckFourOfAKind ();
+			if (FourOfAKindScore > 0)
 			{
-				return FourOfAKindScore;
+				handScore = FourOfAKindScore;
+				handDesc = FourOfAKindDescription;
+				return handScore;
 			}
-			Tuple<int, string> FullHouseScore = CheckFullHouse ();
-			if (FullHouseScore.Item1 > 0)
+
+			FullHouseScore = CheckFullHouse ();
+			if (FullHouseScore > 0)
 			{
-				return FullHouseScore;
+				handScore = FullHouseScore;
+				handDesc = FullHouseDescription;
+				return handScore;
 			}
-			Tuple<int, string> FlushScore = CheckFlush ();
-			if (FlushScore.Item1 > 0)
+
+			// FlushScore will already be set from CheckStraightFlush
+			if (FlushScore > 0)
 			{
-				return FlushScore;
+				handScore = FlushScore;
+				handDesc = FlushDescription;
+				return handScore;
 			}
-			Tuple<int, string> StraightScore = CheckStraight ();
-			if (StraightScore.Item1 > 0)
+
+			StraightScore = CheckStraight ();
+			if (StraightScore > 0)
 			{
-				return StraightScore;
+				handScore = StraightScore;
+				handDesc = StraightDescription;
+				return handScore;
 			}
-			Tuple<int, string> ThreeOfAKindScore = CheckThreeOfAKind ();
-			if (ThreeOfAKindScore.Item1 > 0)
+
+			ThreeOfAKindScore = CheckThreeOfAKind ();
+			if (ThreeOfAKindScore > 0)
 			{
-				return ThreeOfAKindScore;
+				handScore = ThreeOfAKindScore;
+				handDesc = ThreeOfAKindDescription;
+				return handScore;
 			}
-			Tuple<int, string> TwoPairScore = CheckTwoPair ();
-			if (TwoPairScore.Item1 > 0)
+
+			TwoPairScore = CheckTwoPair ();
+			if (TwoPairScore > 0)
 			{
-				return TwoPairScore;
+				handScore = TwoPairScore;
+				handDesc = TwoPairDescription;
+				return handScore;
 			}
-			Tuple<int, string> PairScore = CheckPair ();
-			if (PairScore.Item1 > 0)
+
+			PairScore = CheckPair ();
+			if (PairScore > 0)
 			{
-				return PairScore;
+				handScore = PairScore;
+				handDesc = PairDescription;
+				return handScore;
 			}
-			return CheckHighCard ();
+
+			HighCardScore = CheckHighCard ();
+			handScore = HighCardScore;
+			handDesc = HighCardDescription;
+			return handScore;
 		}
 
 		public HandType GetHandType(int score)
@@ -94,39 +158,42 @@ namespace DailyProg216Poker
 				return HandType.HIGH_CARD;
 		}
 
-		private Tuple<int, string> CheckStraightFlush()
+		private int CheckStraightFlush()
 		{
-			if (CheckFlush ().Item1 == 0)
+			// Set FlushScore - don't need to recalculate this
+			FlushScore = CheckFlush ();
+			if (FlushScore == 0)
 			{
-				return Tuple.Create(0, "");
+				StraightFlushDescription = "";
+				return 0;
 			}
 			int score = 900000;
 
-			Tuple<int, string> straight = CheckStraight ();
-			score += straight.Item1;
-
+			// Set StraightScore
+			StraightScore = CheckStraight ();
+			score += StraightScore;
 			if (score > 900000)
 			{
-				string description;
-				if (straight.Item2.StartsWith ("Ace"))
+				if (StraightDescription.StartsWith ("Ace"))
 				{
-					description = "Royal Flush";
+					StraightFlushDescription = "Royal Flush";
 				}
 				else
 				{
-					description = straight.Item2 + " Flush";
+					StraightFlushDescription = StraightDescription + " Flush";
 				}
-				return Tuple.Create (score, description);
+				return score;
 			}
 			else
 			{
-				return Tuple.Create(0, "");
+				StraightFlushDescription = "";
+				return 0;
 			}
 		}
 
-		private Tuple<int, string> CheckFourOfAKind()
+		private int CheckFourOfAKind()
 		{
-			if (v.Max () == 4)
+			if (MaxValueCount == 4)
 			{
 				int score = 800000;
 				// Add the value of the card that we have 4 of
@@ -137,44 +204,52 @@ namespace DailyProg216Poker
 					score += idx + v.Length;
 				}
 				else {
-					score += v.ToList().IndexOf(4);
+					score += idx;
 				}
-				return Tuple.Create (score, "4 " + (Plurals) idx);
+				FourOfAKindDescription = "4 " + References.GetPluralString(idx);
+				return score;
 			}
 			else {
-				return Tuple.Create(0, "");
+				FourOfAKindDescription = "";
+				return 0;
 			}
 		}
 
-		private Tuple<int, string> CheckFullHouse()
+		private int CheckFullHouse()
 		{
-			if (v.Max () == 3 && v.Contains (2))
+			if (MaxValueCount == 3 && v.Contains (2))
 			{
 				int score = 700000;
-				score += v.ToList ().IndexOf (3) * 10;
-				score += v.ToList ().IndexOf (2) * 10;
-				return Tuple.Create (score, "Full House: " + (Plurals)v.ToList ().IndexOf (3) + " over " + (Plurals)v.ToList ().IndexOf (2));
+				int idx3 = v.ToList ().IndexOf (3);
+				int idx2 = v.ToList ().IndexOf (2);
+				score += idx3 * 10;
+				score += idx2 * 10;
+				FullHouseDescription = "Full House: " + References.GetPluralString(idx3) + " over " + References.GetPluralString(idx2);
+				return score;
 			}
 			else {
-				return Tuple.Create(0, "");
+				FullHouseDescription = "";
+				return 0;
 			}
 		}
 
-		private Tuple<int, string> CheckFlush()
+		private int CheckFlush()
 		{
-			if (s.Max () == 5)
+			if (MaxSuitCount == 5)
 			{
 				string idx = (Suit) s.ToList ().IndexOf (5) + "";
 				idx = idx.ToLower ();
 				idx = char.ToUpper (idx [0]) + idx.Substring (1);
-				return Tuple.Create (600000, idx + " Flush");
+				FlushDescription = idx + " Flush";
+				return 600000;
 			}
 			else {
-				return Tuple.Create(0, "");
+				FlushDescription = "";
+				return 0;
 			}
 		}
 
-		private Tuple<int, string> CheckStraight()
+		private int CheckStraight()
 		{
 			int score = 500000;
 			int card;
@@ -239,14 +314,16 @@ namespace DailyProg216Poker
 				card = 1;
 			}
 			else {
-				return Tuple.Create(0, "");
+				StraightDescription = "";
+				return 0;
 			}
-			return Tuple.Create (score, (Value) card + " High Straight");
+			StraightDescription = References.GetValueString(card) + " High Straight";
+			return score;
 		}
 
-		private Tuple<int, string> CheckThreeOfAKind()
+		private int CheckThreeOfAKind()
 		{
-			if (v.Max () == 3)
+			if (MaxValueCount == 3)
 			{
 				int score = 400000;
 				/*
@@ -257,18 +334,20 @@ namespace DailyProg216Poker
 				 */
 				int idx = v.ToList().IndexOf(3);
 				score += idx;
-				return Tuple.Create (score, "3 " + (Plurals) idx);
+				ThreeOfAKindDescription = "3 " + References.GetValueString(idx);
+				return score;
 			}
 			else {
-				return Tuple.Create(0, "");
+				ThreeOfAKindDescription = "";
+				return 0;
 			}
 		}
 
-		private Tuple<int, string> CheckTwoPair()
+		private int CheckTwoPair()
 		{
-			if (v.Max () == 2)
+			int score = 0;
+			if (MaxValueCount == 2)
 			{
-				int score = 0;
 				int NoOfPairs = 0;
 				int[] PairValues = new int[2];
 				for (int i = 1; i < v.Length; i++)
@@ -282,94 +361,107 @@ namespace DailyProg216Poker
 				if (NoOfPairs == 2)
 				{
 					score = 300000;
-					// Check for Ace
-					if (PairValues.Min() == 1)
+					int PairMax;
+					int PairMin;
+					// Faster than PairValues.Min and .Max
+					if (PairValues[0] > PairValues[1])
 					{
-						score += PairValues.Max () * 10;
-						score += PairValues.Min () * 10;
-						return Tuple.Create (score, "Pair of "+(Plurals)PairValues.Min () + " over " + (Plurals)PairValues.Max ());
+						PairMax = PairValues [0];
+						PairMin = PairValues [1];
+					}
+					else
+					{
+						PairMax = PairValues [1];
+						PairMin = PairValues [0];
+					}
+					// Check for Ace
+					if (PairMin == 1)
+					{
+						score += PairMax * 10;
+						score += PairMin * 10;
+						TwoPairDescription = "Pair of " + References.GetPluralString(PairMin) + " over " + References.GetPluralString(PairMax);
 					}
 					else {
-						score += PairValues.Max () * 10;
-						score += PairValues.Min ();
-						return Tuple.Create (score, "Pair of "+(Plurals)PairValues.Max () + " over " + (Plurals)PairValues.Min ());						
+						score += PairMax * 10;
+						score += PairMin;
+						TwoPairDescription = "Pair of "+ References.GetPluralString(PairMax) + " over " + References.GetPluralString(PairMin);
 					}
 				}
 				else {
 					// We don't have two pairs
-					return Tuple.Create(0, "");
+					TwoPairDescription = "";
 				}
 			}
 			else
 			{
-				return Tuple.Create(0, "");
+				TwoPairDescription = "";
 			}
+			return score;
 		}
 
-		private Tuple<int, string> CheckPair()
+		private int CheckPair()
 		{
-			if (v.Max () == 2)
+			int score = 0;
+			if (MaxValueCount == 2)
 			{
-				int score = 200000;
+				score = 200000;
 
 				int addValue = 0;
-				string card = "";
-				for (int i = 1; i < v.Length; i++)
+				// Check Ace First
+				if (v[1] == MaxValueCount)
 				{
-					if (i == 1 && v[i] == v.Max ())
+					score += v.Length + 1; // Ace
+					PairDescription = "Pair of Aces";
+				}
+				else
+				{
+					// Not an Ace pair so start loop on Pair of Twos
+					for (int i = 2; i < v.Length; i++)
 					{
-						score += v.Length + 1; // Ace
-						card = "Pair of " + (Plurals) i;
-						break;
+						if (v[i] == MaxValueCount)
+						{
+							addValue = i;
+						}
 					}
-					else if (v[i] == v.Max())
+					if (addValue > 0)
 					{
-						addValue = i;
+						score += addValue;
+						PairDescription = "Pair of " + References.GetPluralString(addValue);
 					}
 				}
-				if (addValue > 0)
-				{
-					score += addValue;
-					card = "Pair of " + (Plurals) addValue;
-				}
-				return Tuple.Create (score, card);
 			}
-			else
-			{
-				return Tuple.Create(0, "");
-			}
+			return score;
 		}
 
-		private Tuple<int, string> CheckHighCard()
+		private int CheckHighCard()
 		{
-			if (v.Max() == 1)
+			int score = 0;
+			if (MaxValueCount == 1)
 			{
-				int score = 100000;
+				score = 100000;
 				int addValue = 0;
-				string card = "";
-				for (int i = 1; i < v.Length; i++)
+				if (v[1] == MaxValueCount)
 				{
-					if (i == 1 && v[i] == v.Max ())
+					score += v.Length + 1; // Ace
+					HighCardDescription = "Ace High";
+				}
+				else
+				{
+					for (int i = 2; i < v.Length; i++)
 					{
-						score += v.Length + 1; // Ace
-						card = (Value) i + " High";
-						break;
+						if (v[i] == MaxValueCount)
+						{
+							addValue = i;
+						}
 					}
-					else if (v[i] == v.Max())
+					if (addValue > 0)
 					{
-						addValue = i;
+						score += addValue;
+						HighCardDescription = References.GetValueString (addValue) + " High";
 					}
 				}
-				if (addValue > 0)
-				{
-					score += addValue;
-					card = (Value) addValue + " High";
-				}
-				return Tuple.Create (score, card);
 			}
-			else {
-				return Tuple.Create(0, "");
-			}
+			return score;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace DailyProg216Poker
 {
@@ -146,6 +147,7 @@ namespace DailyProg216Poker
 				tableCards.AddRange (flop);
 				tableCards.Add (turn);
 				tableCards.Add (river);
+
 				// Get the players best hand
 				Tuple<int, string, Hand> tmp = p.GetBestHand (tableCards);
 				// Check if the current tmp hand is the best one so far

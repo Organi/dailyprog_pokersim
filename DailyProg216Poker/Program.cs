@@ -10,8 +10,8 @@ namespace DailyProg216Poker
 		Deck deck;
 		List<IPlayer> players = new List<IPlayer> ();
 		const bool includeHumanPlayer = true;
-		const int noOfRounds = 20;
-		const bool printRoundOutput = false;
+		const int noOfRounds = 200;
+		const bool printRoundOutput = true;
 		const bool storeRounds = false;
 		const bool showStats = true;
 		public List<Round> rounds = new List<Round> ();
@@ -45,6 +45,11 @@ namespace DailyProg216Poker
 
 				// Start New Round
 				Round r = new Round(p);
+
+				if (Poker.printRoundOutput)
+				{
+					Console.WriteLine ("Round " + i);
+				}
 
 				// Process Round
 				r.ProcessRound();
@@ -89,6 +94,8 @@ namespace DailyProg216Poker
 			{
 				p.calcStats ();
 			}
+
+			Console.WriteLine ();
 		}
 
 		public void setUp(string[] names)
@@ -183,6 +190,11 @@ namespace DailyProg216Poker
 			foreach (KeyValuePair<HandType, int> hands in sortedWinningHands)
 			{
 				Console.WriteLine (hands.Key + ": " + hands.Value + " wins");
+			}
+			Console.WriteLine ();
+			for (int i = 0; i < roundTimes.Count (); i++)
+			{
+				Console.WriteLine ("Round " + i + ": " + roundTimes [i] + " ms.");
 			}
 		}
 	}

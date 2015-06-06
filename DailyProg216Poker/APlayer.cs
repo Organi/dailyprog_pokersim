@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace DailyProg216Poker
 {
@@ -16,22 +17,33 @@ namespace DailyProg216Poker
 		{
 			// Add the players hand
 			tableCards.AddRange (hand.getHand ());
-			Tuple<int, string, Hand> bestHand = new Tuple<int, string, Hand>(0, "", new Hand(null));
+
+			// Best Hand Init
+			int bestHandScore = 0;
+			string bestHandDesc = "";
+			Hand bestHandHand = new Hand (null);
 			List<List<Card>> handCombinations = new List<List<Card>> ();
 			foreach (IEnumerable<Card> c in tableCards.Combinations (5))
 			{
 				handCombinations.Add (c.ToList ());
 			}
 			HandEvaluator hEval = new HandEvaluator ();
+			int hsScore;
+			string hsDesc;
+			Hand currentHand;
+
 			foreach (List<Card> h in handCombinations)
 			{
-				Tuple<int, string> hs = hEval.GetHandScore (new Hand (h));
-				if (hs.Item1 > bestHand.Item1)
+				currentHand = new Hand (h);
+				hEval.GetHandScore (currentHand, out hsScore, out hsDesc);
+				if (hsScore > bestHandScore)
 				{
-					bestHand = Tuple.Create (hs.Item1, hs.Item2, new Hand (h));
+					bestHandScore = hsScore;
+					bestHandDesc = hsDesc;
+					bestHandHand = currentHand;
 				}
 			}
-			return bestHand;
+			return Tuple.Create (bestHandScore, bestHandDesc, bestHandHand);
 		}
 	}
 }
